@@ -27,6 +27,28 @@ public class DragMove : MonoBehaviour
     private Transform head;
     private Vector3 footPosition;
 
+    // So here's what this is meant to do
+    // 
+    // The VR playing area (XR Rig, the object this script is attached to) is a box
+    // Inside that, the head is represented by the main camera.
+    // We set the Y of the XR Rig to represent the floor level underneath the camera at all times
+    // When we're moving or walking into an obstacle, the XR Rig moves in the scene to accomodate that
+    //
+    // Movement works by holding down the move button on the controller which then locks that hand to that point in space
+    // Meaning that you can then drag yourself along the world until you let go
+    // First button pressed overrides the other, so if you press left hand, hold and press hold right hand the right hand doesn't do anything until you let go of left hand
+    // If all buttons are let go, there should be a little bit of velocity to carry you through (with exceptions for steps/drops)
+    //
+    // Ground colissions are currently fucked.
+    // Intended function:
+    // - Allow moving up slopes up to x degrees
+    // - Allow steps up to x step height (fast lerp between the heights to avoid brain murder)
+    // - Allow for gravity and falling
+    // - Kinda want to also experiment with jumping by swinging both arms backwards
+    // That's basically it. I want to add a crawl function at some point but I'll deal with putting your head through the ceiling later.
+    // If you try to put your head through a wall you'll get pushed back.
+    // 
+    // I (badly) stole most of the logic from this https://www.patreon.com/posts/astro-kat-moving-35207209 
 
     void Start()
     {
@@ -66,7 +88,12 @@ public class DragMove : MonoBehaviour
         }
 
         Vector2 finalCoord = newCoords + HeadProtectionOffset();
+        if (activeHand == null){
+            //get velocity by comparing position button was pressed and button was released and do a small amount of overshoot
+        
+        }
         transform.position = new Vector3(finalCoord.x, SlopeHeight(), finalCoord.y);
+        
     }
 
     private float nearestDistance;
@@ -179,7 +206,7 @@ public class DragMove : MonoBehaviour
         {
             for (int j = 0; j < 2; j++)
             {
-                //Checking from way above to see if we're actually above step height, carry on if not
+                //Checking from way above to see if we're actually above step height, carry on if not. This is fucking shit
                 if (!Physics.Raycast(footPosition + new Vector3(i, maxStepHeight + 1, j), Vector3.down, 1 - maxStepHeight, -1, QueryTriggerInteraction.Ignore))
                 {
                     // Check height at point around player and if it hits anything (and is valid!) we add it to average
