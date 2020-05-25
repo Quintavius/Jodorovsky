@@ -63,3 +63,7 @@ Assets/Editor/x64/Bakery
 Assets/Editor/x64/Bakery.meta
 Assets/Scenes/samplescene
 Assets/Scenes/samplescene.meta
+Assets/Bakery/examples
+Assets/Bakery/examples.meta
+Assets/Bakery/shader/ShaderGraph
+Assets/Editor/x64.meta
